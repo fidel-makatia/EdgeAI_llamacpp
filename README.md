@@ -1,53 +1,58 @@
-# Local LLM Smart Home Assistant for SBCs
+# Local LLM Smart Home Assistant for Arm-Based SBCs
 
-A privacy-first, locally-run smart home assistant powered by a Large Language Model (LLM) for natural language understanding and direct GPIO control on single-board computers (SBCs) such as NVIDIA Jetson and Raspberry Pi. Designed for **speed, privacy, and offline capability**—no cloud needed.
-
----
-
-## 🚀 Overview
-
-This project transforms an SBC into the intelligent core of your smart home. Unlike cloud-dependent solutions like Alexa or Google Assistant, this assistant runs a quantized 7B parameter language model *directly* on your device. It interprets complex, conversational commands (e.g., *“It’s freezing in here”* or *“I want to save on my electricity bill”*) and translates them into real-world actions—turning on heaters, switching off lights, and more—while ensuring your data never leaves your network.
+A **powerful, private, and offline** smart home assistant built to showcase the true potential of Arm architecture. By leveraging a quantized Large Language Model (LLM), this project demonstrates how modern Arm-based single-board computers—such as NVIDIA Jetson (Arm Cortex-A57, A78AE, etc.) and Raspberry Pi (Arm Cortex-A72, A76)—can deliver state-of-the-art AI functionality and real-world device control, right at the edge.
 
 ---
 
-## 🌟 Features
+## 🚀 Why Arm? (And Why This Project?)
 
-* **🧠 True Natural Language Understanding**
-  Leverages a local LLM for context-rich, human-like command interpretation—well beyond basic keyword matching.
+**Arm architecture** powers billions of intelligent edge devices thanks to its unique blend of:
 
-* **⚡ Hardware Accelerated**
-  Offloads model layers to the GPU on supported NVIDIA Jetson boards for fast inference. Runs efficiently in CPU-only mode on Raspberry Pi and other SBCs.
+* **Exceptional energy efficiency** (run AI at a fraction of the power of x86/desktop-class hardware)
+* **Scalable performance** (from tiny microcontrollers to high-performance SBCs and SoCs)
+* **World-class support for AI and ML acceleration** (NEON, GPU, NPU/AI co-processors, and more)
+* **Open ecosystem** with robust Python, Linux, and GPIO support
 
-* **🔒 100% Private & Offline**
-  No internet required; all data and inference happen locally for maximum privacy and reliability.
+This assistant puts these strengths on full display by running a full 7B-parameter LLM (in GGUF format) locally on Arm-powered SBCs, combining real-time natural language understanding, direct GPIO control, and a hybrid fast/AI decision pipeline—all with no cloud dependency and **no privacy compromise**.
 
-* **🔌 Real-World GPIO Control**
-  Directly interfaces with standard GPIO libraries to control relays, LEDs, fans, and other devices.
+---
 
-* **🚀 Hybrid System for Responsiveness**
+## 🌟 Project Highlights
 
-  * **Fast Keyword Match:** Instantly handles direct commands (e.g., *“turn on kitchen light”*)
-  * **LLM Inference:** Handles nuanced, ambiguous, or conversational requests with AI reasoning.
+* **🧠 Edge AI on Arm:**
+  Runs advanced LLM inference directly on affordable Arm SBCs, transforming them into voice-controllable smart home hubs.
 
-* **🌐 REST API**
-  Flask-based web server for remote control and status checks via HTTP.
+* **⚡ Arm-Optimized Acceleration:**
+  Leverages on-chip GPUs (like NVIDIA Jetson’s CUDA-capable GPU) for rapid model inference, with smooth CPU-only operation on Raspberry Pi and other Cortex-A platforms.
 
-* **💻 Simulation Mode**
-  Auto-runs in simulated GPIO mode for development on PC/Mac/Linux (no hardware needed).
+* **🔋 True Efficiency:**
+  AI at the edge, with minimal power draw—run 7B-parameter models on a device powered via USB-C or a simple wall adapter.
+
+* **🔒 Complete Local Privacy:**
+  All voice/text commands are processed and reasoned about locally—no data leaves your network, unlike traditional cloud assistants.
+
+* **🔌 Direct Hardware Control:**
+  Native integration with Arm Linux GPIO libraries for real-world automation—relays, fans, lights, and more.
+
+* **🌐 REST API Built-In:**
+  Flask-powered web API for remote network control from any browser or mobile device.
 
 ---
 
 ## 🛠️ Hardware Requirements
 
-* SBC: NVIDIA Jetson (Nano, Xavier, etc.) or Raspberry Pi (4, 5, etc.)
-* MicroSD card with compatible Linux OS (Jetson Linux, Raspberry Pi OS)
-* Adequate power supply
-* GPIO devices (relays, LEDs, fans, etc.)
-* Breadboard, jumper wires
+* **Arm-based SBC:**
+
+  * **NVIDIA Jetson** (Nano, Xavier, Orin, etc. – Arm Cortex-A57/A78AE, GPU acceleration)
+  * **Raspberry Pi 4/5** (Arm Cortex-A72/A76, CPU-only)
+  * Other compatible Arm Linux boards (with GPIO and Python3)
+* **MicroSD card** (with Jetson Linux or Raspberry Pi OS)
+* **Power supply** for your board
+* **GPIO devices**: relays, LEDs, fans, etc.
 
 ---
 
-## ⚡ Setup & Installation
+## ⚡ Quick Start
 
 ### 1. Clone the Repository
 
@@ -56,35 +61,35 @@ git clone <your-repo-url>
 cd <your-repo-directory>
 ```
 
-### 2. Install Dependencies
+### 2. Install Python Dependencies
 
-**Create and activate a Python virtual environment:**
+**Set up a Python 3 virtual environment:**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-#### **For NVIDIA Jetson (GPU Acceleration):**
+#### On Jetson (GPU/Arm):
 
 ```bash
 pip install llama-cpp-python[server,cuda]
 pip install flask Jetson.GPIO
 ```
 
-#### **For Raspberry Pi & Other SBCs (CPU-only):**
+#### On Raspberry Pi (CPU/Arm):
 
 ```bash
 pip install llama-cpp-python[server]
 pip install flask RPi.GPIO
 ```
 
-### 3. Download a Quantized GGUF Model
+### 3. Download a Quantized GGUF LLM
 
 * **Recommended:** [TheBloke/deepseek-coder-7b-instruct-GGUF](https://huggingface.co/TheBloke/deepseek-coder-7b-instruct-GGUF)
-* **File:** Choose a 4-bit or 5-bit quantized model, e.g.,
+* Download a 4-bit or 5-bit model, e.g.:
   `deepseek-coder-7b-instruct.Q5_K_M.gguf`
-* Place the file in a `models` directory:
+* Place in a `models` directory:
 
 ```bash
 mkdir models
@@ -93,108 +98,79 @@ mv ~/Downloads/deepseek-coder-7b-instruct.Q5_K_M.gguf ./models/
 
 ---
 
-## 🧩 Board Adaptation
+## ▶️ Running the Assistant on Arm
 
-* By default, the script uses `Jetson.GPIO`.
-* **On Raspberry Pi:**
-  Open `rundeep.py` and replace:
-
-  ```python
-  import Jetson.GPIO as GPIO
-  ```
-
-  with
-
-  ```python
-  import RPi.GPIO as GPIO
-  ```
-
----
-
-## ▶️ Usage
-
-### Running the Assistant
-
-**For Jetson (with GPU):**
+**For Jetson (Arm + GPU):**
 
 ```bash
 python rundeep.py --model ./models/your_model.gguf --gpu-layers 35
 ```
 
-**For Raspberry Pi (CPU-only):**
+**For Raspberry Pi (Arm CPU-only):**
 
 ```bash
 python rundeep.py --model ./models/your_model.gguf --gpu-layers 0
 ```
 
-#### Command-line Arguments:
-
-* `--model` (required): Path to your GGUF model file
-* `--gpu-layers`: Number of model layers to offload to GPU (`0` for CPU-only)
-* `--threads`: Number of CPU threads to use (default: 4)
-
-### Interactive Console
-
-Once running, type commands directly in the terminal:
-
-```
-You: It's freezing in here
-You: Turn off the kitchen lights
-You: perf     # Shows performance stats
-You: status   # Shows current device states
-You: quit     # Exits
-```
-
-### Using the Flask API
-
-* **POST command:**
-
-  ```bash
-  curl -X POST http://<sbc-ip>:5000/command \
-    -H "Content-Type: application/json" \
-    -d '{"text": "I want to save on my electricity bill"}'
-  ```
-* **GET status:**
-
-  ```bash
-  curl http://<sbc-ip>:5000/status
-  ```
+* `--model`: Path to your GGUF model
+* `--gpu-layers`: Number of model layers to accelerate with GPU (set to 0 on Pi)
 
 ---
 
-## 🛠️ Configuration
+## 💡 What Makes Arm Shine Here?
 
-### Adding/Editing Devices
+* **Low-Power, High-Performance AI**:
+  Run a billion-parameter LLM while using a tiny fraction of the energy of x86/desktop hardware.
+* **Compact, Scalable Hardware**:
+  Everything fits on a board that’s smaller than your phone, and can run from a battery pack.
+* **Open, Flexible Ecosystem**:
+  No vendor lock-in—adaptable to any Arm Linux board with standard Python and GPIO support.
+* **Direct Access to Hardware Accelerators**:
+  Exploit Jetson’s CUDA cores, NPU/AI accelerators, or run on pure CPU for broad compatibility.
+* **Empowering Next-Gen Edge AI**:
+  Move sophisticated AI out of the cloud, onto the device—enabling privacy, real-time control, and zero latency for the end user.
 
-Edit the `gpio_devices` dictionary in the `SmartHomeAssistant` class within `rundeep.py`:
+---
+
+## 🛠️ Device Customization
+
+Edit the `gpio_devices` dictionary in `rundeep.py` to add or modify your GPIO-controlled devices (pins, aliases, initial state).
 
 ```python
 self.gpio_devices = {
     'living_room_light': {'pin': 7, 'state': False, 'aliases': ['living room', 'main light']},
     'bedroom_light': {'pin': 11, 'state': False, 'aliases': ['bedroom']},
-    # Add your device here
-    'desk_fan': {'pin': 21, 'state': False, 'aliases': ['my fan', 'office fan']}
+    # More devices...
 }
 ```
 
-* `pin`: BOARD pin number on your SBC’s GPIO header
-* `aliases`: List of alternative names the LLM can recognize
+---
+
+## 🌐 API & Console
+
+* **Interactive Console**:
+  Type commands like:
+  `It's freezing in here`
+  `Turn off the kitchen light`
+  `status` (shows device states)
+  `perf` (shows inference stats)
+  `quit` (exit)
+
+* **Flask REST API**:
+  POST commands to `http://<sbc-ip>:5000/command`
+  GET device status from `http://<sbc-ip>:5000/status`
 
 ---
 
 ## 📝 License
 
-This project is licensed under the [MIT License](LICENSE).
+MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## 💡 Credits & Acknowledgments
+## 🎯 For Arm Innovators
 
-Built using [llama.cpp](https://github.com/ggerganov/llama.cpp), [llama-cpp-python](https://github.com/abetlen/llama-cpp-python), and open hardware.
-
----
-
-**Questions? Issues?**
-Open an issue or discussion in this repo!
-
+This project is a proof-of-concept that **Arm architecture is ready for the AI-powered future of edge devices**.
+Deploy advanced LLMs. Run them fast and efficiently. Keep data private and on-device.
+**This is the kind of real-world use case that only Arm can deliver at scale and efficiency.**
 
